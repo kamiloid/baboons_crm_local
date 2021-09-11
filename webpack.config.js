@@ -11,11 +11,10 @@ console.log(__dirname);
 module.exports = ( env, options )=>
 {
 	return {
-		//entry: './src/main.js',
 		entry: [`${__dirname}/src/main.js`, `${__dirname}/src/css/main.css`],
 		output: {
 			path: path.resolve(__dirname, './dist'),
-			filename: 'bundle.js',
+			filename: 'index_bundle.js',
 			chunkFilename: '[id].js',
 			publicPath: './dist'
 		},
@@ -27,7 +26,7 @@ module.exports = ( env, options )=>
 						{
 							loader: 'babel-loader',
 							options: {
-							   presets:['@babel/preset-env']
+								presets:['@babel/preset-env']
 							}
 						}
 					]
@@ -38,7 +37,15 @@ module.exports = ( env, options )=>
 				},
 				{
 					test: /\.(jpg|png)$/,
-					use: ['file-loader']
+					use: [
+						{
+							loader: 'file-loader',
+							options: {
+								name: '[name].[ext]',
+								outputPath: '/assets/img/'
+							}
+						}
+					]
 				},
 				{
 					test: /\.css$/,
@@ -48,18 +55,51 @@ module.exports = ( env, options )=>
 							publicPath: './dist'
 						}
 					}, 'css-loader']
+				},
+				{
+					test: /\.svg$/,
+					use: [
+						{
+							loader: 'file-loader',
+							options: {
+								name: '[name].[ext]',
+								outputPath: '/assets/svg/'
+							}
+						}
+					]
+				},
+				{
+					test: /\.(woff(2)?|ttf|eot|svg)(\?v=\d+\.\d+\.\d+)?$/,
+					use: [
+						{
+							loader: 'file-loader',
+							options: {
+								name: (file)=> {
+									return '[name].[ext]';
+								},
+								outputPath: '/assets/fonts/',
+								publicPath: 'assets'
+							}
+						}
+					]
 				}
 			]
 		},
 		plugins:[
 			new MiniCssExtractPlugin({filename: debug ? 'css/main.css' : 'css/styles-[contenthash].css', chunkFilename: 'css/[id].css'}),
+
 			new HtmlWebpackPlugin({
-			    hash: true,
-			    title: 'Social Baboon',
-			    metaDesc: 'Social Baboon',
-			    template: './src/index.html',
-			    filename: 'index.html',
-			    inject: 'body'
+				hash: true,
+				title: 'Social Baboons',
+				meta: {
+					description: 'Social Baboons',
+					viewport: 'width=device-width, initial-scale=1, shrink-to-fit=no',
+					charset: 'utf-8',
+					title: 'Social Baboons',
+				},
+				template: './src/index.html',
+				filename: 'index.html',
+				inject: 'body'
 			}),
 			new BrowserSyncPlugin({
 				// browse to http://localhost:3000/ during development,
@@ -67,7 +107,7 @@ module.exports = ( env, options )=>
 				host: 'localhost',
 				port: 3000,
 				server: { baseDir: ['dist'] }
-			  })
+			})
 		],
 		mode: options.mode ? 'development' : 'production',
 		output: {
@@ -77,7 +117,7 @@ module.exports = ( env, options )=>
 		// 	extensions: ['.js', '.css']
 		// },
 		optimization: {
-		    minimize: debug ? false : true
+			minimize: debug ? false : true
 		}
 	}
 }

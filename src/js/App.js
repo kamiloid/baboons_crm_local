@@ -73,6 +73,22 @@ export default class App extends Rapp
 		// HTML VIEWs
 		// --------------------------------------------------------------------------------
 		this._view.style =`
+		@font-face {
+		    font-family: 'aaarghnormal';
+		    src: url('assets/fonts/aaargh-webfont.woff2') format('woff2'),
+		         url('assets/fonts/aaargh-webfont.woff') format('woff');
+		    font-weight: normal;
+		    font-style: normal;
+		}
+		@font-face {
+		    font-family: 'abelregular';
+		    src: url('assets/fonts/abel-regular-webfont.woff2') format('woff2'),
+		         url('assets/fonts/abel-regular-webfont.woff') format('woff');
+		    font-weight: normal;
+		    font-style: normal;
+		}
+
+
 		.h100p
 		{
 			height: 100%;

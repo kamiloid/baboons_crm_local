@@ -42,6 +42,12 @@ export default class Rapp{
 		if(this.methods)
 			this.methods();
 	};
+	title = function(title)
+	{
+		let title_tag = document.createElement('title');
+		title_tag.innerHTML = title;
+		document.head.appendChild(title_tag);
+	};
 	add_section = function(name, mod, title, restricted = false)
 	{
 		this._app_sections[name] = {name: name, mod: mod, title: title, restricted: restricted};
