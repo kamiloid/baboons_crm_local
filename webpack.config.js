@@ -1,6 +1,7 @@
 const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
+const BrowserSyncPlugin = require('browser-sync-webpack-plugin');
 
 let debug = true;
 let mode = 'development';
@@ -59,7 +60,14 @@ module.exports = ( env, options )=>
 			    template: './src/index.html',
 			    filename: 'index.html',
 			    inject: 'body'
-			})
+			}),
+			new BrowserSyncPlugin({
+				// browse to http://localhost:3000/ during development,
+				// ./public directory is being served
+				host: 'localhost',
+				port: 3000,
+				server: { baseDir: ['dist'] }
+			  })
 		],
 		mode: options.mode ? 'development' : 'production',
 		output: {
