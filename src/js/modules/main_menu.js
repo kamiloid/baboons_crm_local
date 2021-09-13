@@ -104,9 +104,9 @@ export default class Main_menu extends Rapp
 		this._view.style =`
 		.main_menu{
 			width: 100%;
-			top: 0px;
-		    position: -webkit-sticky;
-		    position: sticky;
+			/*top: 0px;
+			position: -webkit-sticky;
+			position: sticky;*/
 		}
 		.session_info
 		{
@@ -116,12 +116,12 @@ export default class Main_menu extends Rapp
 		.mmenu_item
 		{
 			margin: 5px;
-		    border: 0px;
-		    padding: 10px;
-		    display: block;
-		    width: calc(100% - 10px);
-		    border-radius: 5px;
-		    cursor: pointer;
+			border: 0px;
+			padding: 10px;
+			display: block;
+			width: calc(100% - 10px);
+			border-radius: 5px;
+			cursor: pointer;
 		}
 		.mmenu_item:hover
 		{

@@ -94,26 +94,26 @@ export default class CRM extends Rapp
 		this._view.style =`
 		.crm-header
 		{
-		    border-radius: 5px;
-		    display:unset;
+			border-radius: 5px;
+			display:unset;
 		}
 		.crm-header > div:first-child
 		{
-			top: 0px;
-    		position: sticky;
-    		position: -webkit-sticky;
-    		background-color: #FFF;
+			/*top: 0px;
+			position: sticky;
+			position: -webkit-sticky;
+			background-color: #FFF;*/
 		}
 		.crm-section
 		{
-		    background-color: #EDEDED;
-		    margin: 5px;
+			background-color: #EDEDED;
+			margin: 5px;
 			box-sizing: border-box;
-		    border-radius: 5px;
+			border-radius: 5px;
 		}
 		.crm-body
 		{
-		    padding: 10px;
+			padding: 10px;
 		}
 		`;
 

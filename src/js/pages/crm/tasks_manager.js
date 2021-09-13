@@ -154,11 +154,11 @@ export default class Tasks_manager extends Rapp
 		.crm-task
 		{
 			margin: 10px;
-		    padding: 0px;
-		    background-color: #DDD;
-		    border-radius: 5px;
-		    transition: all 0.3s;
-		    border: solid 1px #CCC;
+			padding: 0px;
+			background-color: #DDD;
+			border-radius: 5px;
+			transition: all 0.3s;
+			border: solid 1px #CCC;
 		}
 		.crm-task:hover
 		{
@@ -177,27 +177,27 @@ export default class Tasks_manager extends Rapp
 		.crm-task h3, .crm-task p
 		{
 			margin: 0px;
-    		padding: 0px;
+			padding: 0px;
 		}
 		.crm-task .task-client
 		{
 			padding: 5px;
-    		margin: 0px;
+			margin: 0px;
 		}
 		.crm-task button
 		{
 			margin: 0px;
-		    width: 100%;
-		    text-align: left;
-		    border-radius: 5px 5px 0px 0px;
-	        background-color: #92c1b0;
-    		color: #2b5c52;
+			width: 100%;
+			text-align: left;
+			border-radius: 5px 5px 0px 0px;
+			background-color: #92c1b0;
+			color: #2b5c52;
 		}
 		.crm-task .client-btn
 		{
 			background-color: #EDEDED;
 			color: #666;
-    		border-radius: 0px 0px 5px 5px;
+			border-radius: 0px 0px 5px 5px;
 		}
 		`;
 

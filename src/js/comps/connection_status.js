@@ -44,13 +44,7 @@ export default class Connection_status extends Rapp
 		this.state('server_attempts', 0);
 		this.state('server_max_attempts', 2);
 		this.state('sync', null);
-		this.state('checker_view', 'on');
-		this.state('checker_txt', 'Connected');
-		this.state('checker_lbox', 'none');
-		this.state('checker_lbox_pos', 'fixed');
-		this.state('checker_lbox_tl', 'top:0px;left:0px');
-		this.state('checker_lbox_zindex', '10000');
-		this.state('checker_lbox_wh', 'weight:100%;height:100%');
+		this.state('checker_lb_styles', '');
 	}
 	methods()
 	{
@@ -114,6 +108,7 @@ export default class Connection_status extends Rapp
 					this.state('server_attempts', 0, false);
 				if(this.get_state('server_attempts') === 0)
 				{
+					this.state('checker_lb_styles', `display:none`, false);
 					this.state('status', true, false);
 					this.state('checker_view', this.get_state('internet') ? 'on' : 'off', false);
 					this.state('checker_txt', this.get_state('internet') ? 'Connected' : 'No internet connection');
@@ -124,11 +119,8 @@ export default class Connection_status extends Rapp
 			});
 		this.action('ping_error', (resp)=>
 			{
-				this.state('checker_lbox', 'block');
-				this.state('checker_lbox_zindex', '10000');
-				this.state('checker_lbox_wh', 'weight:100%;height:100%');
-				this.state('checker_lbox_pos', 'fixed');
-				this.state('checker_lbox_tl', 'top:0px;left:0px');
+				this.state('checker_lb_styles', `display:block;position:fixed;top:0px;left:0px;width:100%;height:100%;z-index:1000`, false);
+
 				this.state('status', false, false);
 				this.state('checker_view', 'off', false);
 				this.state('checker_txt', this.get_state('internet') ? `No connection with server` : 'No internet connection');
@@ -177,14 +169,15 @@ export default class Connection_status extends Rapp
 		.conn-validator
 		{
 			background-color:rgba(255, 255, 255, 0.7);
-			top: 
 		}
 		`;
 
-		this._view.main = `<div class='status-bbox status-${this.get_state('checker_view')}'>
-			<p>${this.get_state('checker_txt')}</p>
-		</div>
-		<div class='conn-validator' style='display:${this.state('checker_lbox')};position:${this.state('checker_lbox_pos')};${this.state('checker_lbox_tl')};z-index:${this.state('checker_lbox_zindex')};${this.state('checker_lbox_wh')}'></div>`;
+		this._view.main = `<div>
+			<div class='status-bbox status-${this.get_state('checker_view')}'>
+				<p>${this.get_state('checker_txt')}</p>
+			</div>
+			<div class='conn-validator' style='${this.state('checker_lb_styles')}'></div>
+		</div>`;
 		// --------------------------------------------------------------------------------
 		// --------------------------------------------------------------------------------
 	}
