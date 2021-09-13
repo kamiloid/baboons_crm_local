@@ -6,7 +6,7 @@ import Rapp from '../relast.js';
 // // --------------------------------------------------------------------------------
 // // --------------------------------------------------------------------------------
 
-export default class Server_feedback extends Rapp
+export default class Connection_status extends Rapp
 {
 	constructor(conf)
 	{
@@ -37,6 +37,15 @@ export default class Server_feedback extends Rapp
 		// - get state: this.get_state('state_key');
 		// --------------------------------------------------------------------------------
 		// --------------------------------------------------------------------------------
+		this.state('status', true);
+		this.state('internet', window.navigator.onLine);
+		this.state('server_sync', 10);
+		this.state('sync_temp', 1000);
+		this.state('server_attempts', 0);
+		this.state('server_max_attempts', 2);
+		this.state('sync', null);
+		this.state('checker_view', 'on');
+		this.state('checker_txt', 'Connected');
 	}
 	methods()
 	{
@@ -48,11 +57,18 @@ export default class Server_feedback extends Rapp
 		// - call a method: this.call_method('state_key', args...);
 		// --------------------------------------------------------------------------------
 		// --------------------------------------------------------------------------------
+		this.method('run', ()=>
+		{
+			this.call_action('start_sync');
+		});
 	}
 	created(){}
 	rendered(){}
 	run = function(props)
 	{
+		this.state('sync_temp', props.sync_temp || this.get_state('sync_temp'), false);
+		this.state('server_sync', props.server_sync || this.get_state('server_sync'), false);
+
 		// --------------------------------------------------------------------------------
 		// ACTIONS
 		// --------------------------------------------------------------------------------
@@ -60,6 +76,53 @@ export default class Server_feedback extends Rapp
 		// this.call_action('action_key', args[object]);
 		// --------------------------------------------------------------------------------
 		// --------------------------------------------------------------------------------
+		this.action('start_sync', ()=>
+			{
+				let cont_sync = 0;
+				this.state('sync', window.setInterval(()=>
+					{
+						this.state('internet', window.navigator.onLine);
+						if(!this.get_state('internet'))
+							return this.call_action('ping_error');
+						else
+							this.call_action('ping_ok');
+							
+						if(cont_sync % this.get_state('server_sync') === 0)
+						{
+							cont_sync = 0;
+							if(this.get_state('server_attempts') >= this.get_state('server_max_attempts'))
+								this.call_action('ping_error');
+							else
+								this.state('server_attempts', this.get_state('server_attempts') + 1);
+							this.call_action('ping');
+						}
+						cont_sync++;
+					}, this.get_state('sync_temp')));
+			});
+		this.action('ping', ()=>
+			{
+				this.api(this._main._api_main, 'app', 'run', {}, null, 'ping_ok', null, 'ping_error');
+			});
+		this.action('ping_ok', (resp)=>
+			{
+				if(resp !== undefined && resp !== null)
+					this.state('server_attempts', 0, false);
+				if(this.get_state('server_attempts') === 0)
+				{
+					this.state('status', true, false);
+					this.state('checker_view', this.get_state('internet') ? 'on' : 'off', false);
+					this.state('checker_txt', this.get_state('internet') ? 'Connected' : 'No internet connection');
+				}else if(this.get_state('server_attempts') < this.get_state('server_max_attempts')){
+					this.state('checker_view', 'check', false);
+					this.state('checker_txt', this.get_state('internet') ? `Connecting with server: ${this.get_state('server_attempts')}` : 'No internet connection');
+				}
+			});
+		this.action('ping_error', (resp)=>
+			{
+				this.state('status', false, false);
+				this.state('checker_view', 'off', false);
+				this.state('checker_txt', this.get_state('internet') ? `No connection with server` : 'No internet connection');
+			});
 
 		// --------------------------------------------------------------------------------
 		// HTML VIEWs
@@ -73,17 +136,47 @@ export default class Server_feedback extends Rapp
 		// --------------------------------------------------------------------------------
 		//this._view.iterators.items = `<p key='[k]'>[v]</p>`;
 
-		this._view.style =``;
+		this._view.style =`
+		.status-bbox
+		{
+			padding: 10px;
+			box-sizing: border-box;
+			margin: 5px 0px 0px 0px;
+			border-radius: 5px 0px 0px 0px;
+		}
+		.status-bbox > p
+		{
+			margin: 0px;
+			font-size: 0.6rem;
+		}
+		.status-on
+		{
+			background-color: #208f7d;
+			color: #FFF;
+		}
+		.status-off
+		{
+			background-color: #c70e0e;
+			color: #FFF;
+		}
+		.status-check
+		{
+			background-color: #ffa600;
+			color: #000;
+		}
+		`;
 
-		this._view.main = `<div></div>`;
+		this._view.main = `<div class='status-bbox status-${this.get_state('checker_view')}'>
+			<p>${this.get_state('checker_txt')}</p>
+		</div>`;
 		// --------------------------------------------------------------------------------
 		// --------------------------------------------------------------------------------
 	}
 }
-Server_feedback.default_props = {};
+Connection_status.default_props = {};
 
 
 // --------------------------------------------------------------------------------
 // INCLUDE INTO window OBJECT [ ONLY WITOUT WEBPACK ]
 // --------------------------------------------------------------------------------
-// window.Server_feedback = Server_feedback;
+// window.Connection_status = Connection_status;

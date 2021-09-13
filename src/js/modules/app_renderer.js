@@ -4,14 +4,14 @@
 // import [class name | variable]('file_path[.js]');
 import Rapp from '../relast.js';
 
-import Server_feedback from '../comps/server_feddback.js';
+import Connection_status from '../comps/connection_status.js';
 import Router from '../pages/Router.js';
 
 import Main_menu from './main_menu.js';
 import Login from './login.js';
 import Signup from './signup.js';
-// // --------------------------------------------------------------------------------
-// // --------------------------------------------------------------------------------
+// --------------------------------------------------------------------------------
+// --------------------------------------------------------------------------------
 
 export default class App_renderer extends Rapp
 {
@@ -27,7 +27,7 @@ export default class App_renderer extends Rapp
 		// this.add_comps([classes:Array]); --> item array: {name: [class_name:string], class: [class:imported-object]}
 		// --------------------------------------------------------------------------------
 		// --------------------------------------------------------------------------------
-		this.add_comp('Server_feedback', Server_feedback);
+		this.add_comp('Connection_status', Connection_status);
 		this.add_comp('Router', Router);
 		this.add_comp('Main_menu', Main_menu);
 		this.add_comp('Login', Login);
@@ -80,6 +80,7 @@ export default class App_renderer extends Rapp
 				if(this.get_state('logged') === true)
 				{
 					this.call_action('load_main_menu');
+					this._main._mods.Connection_status.call_method('run');
 				}
 			});
 		this.action('login_reponse', (args)=>
@@ -138,10 +139,16 @@ export default class App_renderer extends Rapp
 		.body-content
 		{
 			flex-grow: 2;
+		}
+		.conn-status
+		{
+			position: fixed;
+			bottom: 0px;
+			right: 0px;
 		}`;
 
 		this._view.main = `<div class='h100p'>
-			<Server_feedback></Server_feedback>
+			<Connection_status class='conn-status'></Connection_status>
 			${
 				!this.get_state('logged') ?
 				`<div class='login_home'>

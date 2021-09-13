@@ -366,10 +366,11 @@ export default class Rapp{
 			type: type
 		});
 	};
-	state = function(key, value, update=true)
+	state = function(key, value=null, update=true)
 	{
 		if(!key) return;
 		if(key.trim() == '') return;
+		if(value === null || value === undefined) return this._states[key];
 		let reload = true;
 		if(this._states[key] === undefined)
 			reload = false;
