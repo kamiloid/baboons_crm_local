@@ -121,9 +121,9 @@ export default class App_renderer extends Rapp
 		.login_home
 		{
 			display: flex;
-    		flex-wrap: wrap;
-    		justify-content: center;
-    		/*height: 100%;*/
+			flex-wrap: wrap;
+			justify-content: center;
+			/*height: 100%;*/
 		}
 		.main_home
 		{

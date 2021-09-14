@@ -95,38 +95,38 @@ export default class Session_render extends Rapp
 		.session_pic_bbox .session_pic_bg
 		{
 			background-color: #DDD;
-		    border-radius: 100%;
-		    max-width: 100px;
-		    margin: 0px auto;
+			border-radius: 100%;
+			max-width: 100px;
+			margin: 0px auto;
 		}
 		.session_pic_bbox .session_pic_bg > div
 		{
 			width: 95%;
-		    height: 100px;
-		    margin: 0px auto;
-		    background-size: contain;
-		    background-repeat: no-repeat;
-		    background-position: center;
+			height: 100px;
+			margin: 0px auto;
+			background-size: contain;
+			background-repeat: no-repeat;
+			background-position: center;
 		}
 		.session_info_bbox .session_info_title
 		{
 			text-align: center;
 			font-size: 10pt;
 			margin: 4px 0px 0px;
-    		padding: 2px 0px 0px;
-    		background-color: #92c1b0;
-		    border-radius: 5px 5px 0px 0px;
-		    color: #2b5c52;
+			padding: 2px 0px 0px;
+			background-color: #92c1b0;
+			border-radius: 5px 5px 0px 0px;
+			color: #2b5c52;
 		}
 		.session_info_bbox .session_info_value
 		{
 			text-align: center;
 			font-size: 12pt;
-    		margin: 0px 0px 4px;
-    		padding: 2px 0px;
-    		border: solid 1px #DDD;
-		    border-top: 0px;
-		    border-radius: 0px 0px 5px 5px;
+			margin: 0px 0px 4px;
+			padding: 2px 0px;
+			border: solid 1px #DDD;
+			border-top: 0px;
+			border-radius: 0px 0px 5px 5px;
 		}
 		`;
 

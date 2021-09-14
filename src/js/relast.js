@@ -212,6 +212,26 @@ export default class Rapp{
 			}
 			str_dom += `${this._view[v]}`;
 		}
+
+		if(str_dom.includes('[render:'))
+		{
+			const render_regex = str_dom.match(/\[render([:|a-z|A-Z|0-9|-|_|<|>|\/|\s|=|'|\[|\]|"])*>\]/gm);
+			if(render_regex)
+			{
+				for(let r of render_regex)
+				{
+					const split = r.split(':');
+					const state = split[1];
+					if(!this._states[state]) continue;
+					if(this._states[state].length === 0) continue;
+					const html = split[2].substring(0, split[2].length - 1);
+					this._view.iterators[`${state}_items`] = html;
+					const render = this.render(state, `${state}_items`);
+					str_dom = str_dom.replace(r, render);
+				}
+			}
+		}
+
 		if(this._vdom)
 			this.clean_dom(this._vdom);
 		this._vdom = document.createElement('div');
@@ -247,10 +267,36 @@ export default class Rapp{
 					continue;
 				if(n.nodeValue.includes('[state:'))
 				{
-					n.nodeValue = n.nodeValue.replace('[state:', '').replace(']', '');
-					let state = n.nodeValue;
-					n.nodeValue = n.nodeValue.replace(n.nodeValue, this._states[n.nodeValue]);
-					this.add_binder(state, new_parent, 'o');
+					const state_regex = n.nodeValue.match(/\[state([:|a-z|A-Z|0-9|-|_])*\]/gm);
+					if(state_regex)
+					{
+						for(let r of state_regex)
+						{
+							const reg = r.replace('[state', '').replace(']', '');
+							const split = reg.trim().split(':');
+							let state_buffer = [];
+							for(let s of split)
+							{
+								if(s.trim() === '') continue;
+								state_buffer = [...state_buffer, s];
+							}
+							
+							if(state_buffer.length >= 1)
+							{
+								let state = state_buffer[0];
+								let value = this._states[state];
+								if(state_buffer.length > 1)
+								{
+									let aux = this._states[state];
+									for(let s of state_buffer)
+										aux = aux[s];
+									value = aux;
+								}
+								n.nodeValue = n.nodeValue.replace(r, value);
+								this.add_binder(state, new_parent, 'o');
+							}
+						}
+					}
 				}
 				if(parent.childNodes.length === 1)
 				{

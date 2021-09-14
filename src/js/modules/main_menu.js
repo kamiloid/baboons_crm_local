@@ -4,8 +4,9 @@
 // import [class name | variable]('file_path[.js]');
 import Rapp from '../relast.js';
 import Session_render from './session_render.js';
-// // --------------------------------------------------------------------------------
-// // --------------------------------------------------------------------------------
+import test1 from './test1.html'; 
+// --------------------------------------------------------------------------------
+// --------------------------------------------------------------------------------
 
 export default class Main_menu extends Rapp
 {
@@ -81,6 +82,7 @@ export default class Main_menu extends Rapp
 					if(args[i].restricted && this._main._mods.Session.get_state('plan') !== 1) continue;
 					buffer.push({p1: args[i].name, k: args[i].mod, v: args[i].title});
 				}
+				this.state('plan', this._main._mods.Session.state('plan'), false);
 				this.state('menu_items', buffer);
 			});
 		this.action('route', (args)=>
@@ -139,22 +141,16 @@ export default class Main_menu extends Rapp
 			color: #cffaee;
 		}
 		`;
-
+		
 		this._view.main = `<div class='main_menu'>
 			<Session_render logout='logout_response' class='session_info'></Session_render>
 			<div>
 				<hr />
 				${this.render('menu_items', 'btns_items')}
 			</div>
-			${
-				parseInt(this.get_state('plan')) === 1 ? 
-				`<div>
-					<h2>CRM</h2>
-					<hr />
-				</div>`
-				:
-				``
-			}
+			<div>
+				${test1}
+			</div>
 		</div>`;
 		// --------------------------------------------------------------------------------
 		// --------------------------------------------------------------------------------
