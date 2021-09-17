@@ -1,7 +1,9 @@
+
 <div>
-    [render:menu_items:<button key='[k]' class='mmenu_item idle' onclick='route'>[v]</button>]
+    {%for:3:<button>hello world [k]</button>%}
 </div>
 <div>
-    [for:3:<button>hello world [k]</button>]
+    {%render:menu_items:<button key='[k]' class='mmenu_item idle' onclick='route'>[v]</button>%}
 </div>
 <div>hola mundo cruel [state:plan]</div>
+<div>hola mundo cruel {%if:plan = 1:<p>business</p>:<p>no business</p>%}</div>

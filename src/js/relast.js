@@ -193,54 +193,110 @@ export default class Rapp{
 	};
 	render_regex = function(str_dom)
 	{
-		if(str_dom.includes('[render:'))
+		let text = str_dom;
+		const regexp = text.match(/\{\%render([:|a-z|A-Z|0-9|-|_|<|>|\/|\s|=|'|\[|\]|"|#])*\%\}/gm);
+		if(regexp !== null)
 		{
-			const render_regex = str_dom.match(/\[render([:|a-z|A-Z|0-9|-|_|<|>|\/|\s|=|'|\[|\]|"|#])*>\]/gm);
-			if(render_regex)
+			if(regexp.length === 0) return text;
+			for(let r of regexp)
 			{
-				for(let r of render_regex)
-				{
-					const split = r.split(':');
-					if(split[1] === null || split[1] === undefined) continue;
-					if(split[2] === null || split[2] === undefined) continue;
-					const state = split[1];
-					if(!this._states[state]) continue;
-					if(this._states[state].length === 0) continue;
-					const html = split[2].substring(0, split[2].length - 1);
-					this._view.iterators[`${state}_items`] = html;
-					const render = this.render(state, `${state}_items`);
-					str_dom = str_dom.replace(r, render);
-				}
+				const split = r.split(':');
+				if(split[1] === null || split[1] === undefined) continue;
+				if(split[2] === null || split[2] === undefined) continue;
+				const state = split[1];
+				if(!this._states[state]) continue;
+				if(this._states[state].length === 0) continue;
+				const html = split[2].substring(0, split[2].length - 2);
+				this._view.iterators[`${state}_items`] = html;
+				const render = this.render(state, `${state}_items`);
+				text = text.replace(r, render);
 			}
 		}
-		return str_dom;
+		return text;
 	};
 	for_regex = function(str_dom)
 	{
-		if(str_dom.includes('[for:'))
+		let text = str_dom;
+		const regexp = text.match(/\{\%for([:|a-z|A-Z|0-9|-|_|<|>|\\|\/|\s|=|'|\[|\]|"|#])*\%\}/gm);
+		if(regexp)
 		{
-			const for_regex = str_dom.match(/\[for([:|a-z|A-Z|0-9|-|_|<|>|\\|\/|\s|=|'|\[|\]|"|#])*>\]/gm);
-			if(for_regex)
+			const for_regex = str_dom.match();
+			if(regexp.length === 0) return text;
+			for(let r of regexp)
 			{
-				for(let r of for_regex)
-				{
-					const split = r.split(':');
-					let str = '';
-					if(split[1] === null || split[1] === undefined) continue;
-					if(split[2] === null || split[2] === undefined) continue;
-					try{
-						const limit = parseInt(split[1]);
-						const html = split[2].substring(0, split[2].length - 1);
-						for(let i = 0; i < limit; i++)
-						{
-							str += html.replace(/(\[k\])+/g, i);
-						}
-					}catch(e){}
-					str_dom = str_dom.replace(r, str);
-				}
+				const split = r.split(':');
+				let str = '';
+				if(split[1] === null || split[1] === undefined) continue;
+				if(split[2] === null || split[2] === undefined) continue;
+				try{
+					const limit = parseInt(split[1]);
+					const html = split[2].substring(0, split[2].length - 2);
+					for(let i = 0; i < limit; i++)
+					{
+						str += html.replace(/(\[k\])+/g, i);
+					}
+				}catch(e){}
+				text = text.replace(r, str);
 			}
 		}
-		return str_dom;
+		return text;
+	};
+	if_regex = function(str_dom)
+	{
+		let text = str_dom;
+		const regexp = text.match(/\{\%if([:|a-z|A-Z|0-9|-|_|<|>|\\|\/|\s|=|'|\[|\]|"|#])*>\%\}/gm);
+		if(regexp)
+		{
+			if(regexp.length === 0) return text;
+			for(let r of regexp)
+			{
+				const split = r.split(':');
+				let str = '';
+				if(split[1] === null || split[1] === undefined) continue;
+				if(split[2] === null || split[2] === undefined) continue;
+				try{
+					const cond = split[1];
+					let buffer = cond.split('and').concat(cond.split('or'));
+					let buffer2 = cond.match(/and|or/g) || [];
+					let index = 0;
+					let cond_index = 0
+					let final_result = true;
+					for(let b of buffer)
+					{
+						if(b.trim() === '') continue;
+						const cond_split = b.trim().split(/[=|<|>|>=|<=|<>|\s]+/g);
+						const cond_match = b.trim().match(/[=|<|>|>=|<=|<>]+/g);
+						const arg1 = cond_split[cond_index + index];
+						if(arg1 === undefined || arg1 === null) continue;
+						const state = this._states[arg1.trim()];
+						if(state === undefined) continue;
+						let arg2 = cond_split[cond_index + index + 1];
+						if(arg2 === undefined || arg2 === null) continue;
+						arg2 = parseInt(arg2.trim()) === isNaN ? arg2.trim() : parseInt(arg2.trim());
+						arg2 = typeof(arg2) === 'string' ? ( arg2 === 'true' ? true : false ) : arg2;
+						const _eval = cond_match[index];
+						let result = state === arg2;
+						if(_eval === '>' && typeof(arg2) === 'number') result = state > arg2;
+						else if(_eval === '<' && typeof(arg2) === 'number') result = state < arg2;
+						else if(_eval === '>=' && typeof(arg2) === 'number') result = state >= arg2;
+						else if(_eval === '<=' && typeof(arg2) === 'number') result = state <= arg2;
+						else if(_eval === '<>') result = state !== arg2;
+						const joiner = buffer2.length > 0 ? buffer2[index] : '';
+						if(joiner === 'and') final_result &&= result;
+						else if(joiner === 'or') final_result ||= result;
+						else final_result = result;
+						cond_index++;
+						index++;
+					}
+					const resp_true = split.length === 3 ? split[2].substring(0, split[2].length - 2) : split[2];
+					const resp_false = split.length === 4 ? split[3].substring(0, split[3].length - 2) : '';
+					
+					const html = final_result ? resp_true : resp_false;
+					text = text.replace(r, html);
+				}catch(e){console.log(e);}
+			}
+		}
+		return text;
 	};
 	run_dom = function()
 	{
@@ -264,8 +320,9 @@ export default class Rapp{
 			str_dom += `${this._view[v]}`;
 		}
 
-		str_dom = this.for_regex(str_dom);
 		str_dom = this.render_regex(str_dom);
+		str_dom = this.for_regex(str_dom);
+		str_dom = this.if_regex(str_dom);
 
 		if(this._vdom)
 			this.clean_dom(this._vdom);
