@@ -191,6 +191,57 @@ export default class Rapp{
 			this.run_sub_mods(mod);
 		}
 	};
+	render_regex = function(str_dom)
+	{
+		if(str_dom.includes('[render:'))
+		{
+			const render_regex = str_dom.match(/\[render([:|a-z|A-Z|0-9|-|_|<|>|\/|\s|=|'|\[|\]|"|#])*>\]/gm);
+			if(render_regex)
+			{
+				for(let r of render_regex)
+				{
+					const split = r.split(':');
+					if(split[1] === null || split[1] === undefined) continue;
+					if(split[2] === null || split[2] === undefined) continue;
+					const state = split[1];
+					if(!this._states[state]) continue;
+					if(this._states[state].length === 0) continue;
+					const html = split[2].substring(0, split[2].length - 1);
+					this._view.iterators[`${state}_items`] = html;
+					const render = this.render(state, `${state}_items`);
+					str_dom = str_dom.replace(r, render);
+				}
+			}
+		}
+		return str_dom;
+	};
+	for_regex = function(str_dom)
+	{
+		if(str_dom.includes('[for:'))
+		{
+			const for_regex = str_dom.match(/\[for([:|a-z|A-Z|0-9|-|_|<|>|\\|\/|\s|=|'|\[|\]|"|#])*>\]/gm);
+			if(for_regex)
+			{
+				for(let r of for_regex)
+				{
+					const split = r.split(':');
+					let str = '';
+					if(split[1] === null || split[1] === undefined) continue;
+					if(split[2] === null || split[2] === undefined) continue;
+					try{
+						const limit = parseInt(split[1]);
+						const html = split[2].substring(0, split[2].length - 1);
+						for(let i = 0; i < limit; i++)
+						{
+							str += html.replace(/(\[k\])+/g, i);
+						}
+					}catch(e){}
+					str_dom = str_dom.replace(r, str);
+				}
+			}
+		}
+		return str_dom;
+	};
 	run_dom = function()
 	{
 		// let str_dom = this._view.main;
@@ -213,24 +264,8 @@ export default class Rapp{
 			str_dom += `${this._view[v]}`;
 		}
 
-		if(str_dom.includes('[render:'))
-		{
-			const render_regex = str_dom.match(/\[render([:|a-z|A-Z|0-9|-|_|<|>|\/|\s|=|'|\[|\]|"])*>\]/gm);
-			if(render_regex)
-			{
-				for(let r of render_regex)
-				{
-					const split = r.split(':');
-					const state = split[1];
-					if(!this._states[state]) continue;
-					if(this._states[state].length === 0) continue;
-					const html = split[2].substring(0, split[2].length - 1);
-					this._view.iterators[`${state}_items`] = html;
-					const render = this.render(state, `${state}_items`);
-					str_dom = str_dom.replace(r, render);
-				}
-			}
-		}
+		str_dom = this.for_regex(str_dom);
+		str_dom = this.render_regex(str_dom);
 
 		if(this._vdom)
 			this.clean_dom(this._vdom);
