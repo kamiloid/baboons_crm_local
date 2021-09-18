@@ -18,6 +18,7 @@ export default class Rapp{
 	_prev_states = {};
 	_rstates = {};
 	_istates = {};
+	// _uidstates = {};
 	_view = {main: '<div></div>', iterators: {}, style:`<style></style>`};
 	_net = {};
 	_mods = {};
@@ -410,6 +411,7 @@ export default class Rapp{
 							if(state_buffer.length >= 1)
 							{
 								let state = state_buffer[0];
+								// this.set_node_state(state, n.parentNode, document.createElement(n.parentNode.tagName));
 								let value = this._states[state];
 								if(state_buffer.length > 1)
 								{
@@ -508,6 +510,7 @@ export default class Rapp{
 					{
 						v = v.replace('[state:', '').replace(']', '');
 						let state = v;
+						// this.set_node_state(state, n.parentNode, node.parentNode);
 						v = v.replace(v, this._states[state]);
 						this.add_binder(state, node, 'i');
 						if(n.tagName.toLowerCase() === 'input')
@@ -538,6 +541,24 @@ export default class Rapp{
 			type: type
 		});
 	};
+	// set_node_state = function(state, virtual_node, visual_node)
+	// {
+	// 	if(state === null || state === undefined) return;
+	// 	if(typeof(state) !== 'string') return;
+	// 	if(!this._states[state]) return;
+
+	// 	if(!this._uidstates[state])
+	// 		this._uidstates[state] = [];
+	// 	const uid = Rapp.uid();
+	// 	this._uidstates[state][uid] = {virtual: virtual_node, visual: visual_node};
+	// 	// console.log(this._uidstates[state]);
+	// };
+	// state_change = function(key)
+	// {
+	// 	const buffer = this._uidstates[key];
+	// 	if(!buffer) return;
+	// 	console.log(buffer);
+	// };
 	state = function(key, value=null, update=true)
 	{
 		if(!key) return;
@@ -566,6 +587,7 @@ export default class Rapp{
 					node.innerHTML = this._states[key];
 			}
 		}
+		// this.state_change(key);
 		if(reload && this._update_dom && update)
 		{
 			this.init();

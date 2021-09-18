@@ -4,7 +4,6 @@
 // import [class name | variable]('file_path[.js]');
 import Rapp from '../relast.js';
 import Session_render from './session_render.js';
-import test1 from './test1.html'; 
 // --------------------------------------------------------------------------------
 // --------------------------------------------------------------------------------
 
@@ -147,9 +146,6 @@ export default class Main_menu extends Rapp
 			<div>
 				<hr />
 				${this.render('menu_items', 'btns_items')}
-			</div>
-			<div>
-				${test1}
 			</div>
 		</div>`;
 		// --------------------------------------------------------------------------------

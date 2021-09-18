@@ -137,7 +137,7 @@ export default class Session_render extends Rapp
 		this._view.main = `<div class='session_info_bbox'>
 			<div class='session_pic_bbox'>
 				<div class='session_pic_bg'>
-					<div style='background-image:url(${picture !== null ? picture : 'https://aclcode.com/media/icos/default_user.svg'})'></div>
+					<div style='background-image:url(${picture !== null && picture !== undefined ? picture : 'https://aclcode.com/media/icos/default_user.svg'})'></div>
 				</div>
 			</div>
 			<div>

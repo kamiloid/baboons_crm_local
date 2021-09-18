@@ -77,7 +77,7 @@ export default class App_renderer extends Rapp
 			{
 				let logged = !args.error && args.logged;
 				this.state('logged', logged);
-				if(this.get_state('logged') === true)
+				if(this.state('logged') === true)
 				{
 					this.call_action('load_main_menu');
 					this._main._mods.Connection_status.call_method('run');
@@ -150,7 +150,7 @@ export default class App_renderer extends Rapp
 		this._view.main = `<div class='h100p'>
 			<Connection_status class='conn-status'></Connection_status>
 			${
-				!this.get_state('logged') ?
+				!this.state('logged') ?
 				`<div class='login_home'>
 					<Login resp='login_reponse' api='${this._main._api_main}' addon='login' cmd='try'></Login>
 					<Signup resp='signup_response' api='${this._main._api_main}' addon='login' cmd='signin'></Signup>
