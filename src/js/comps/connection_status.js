@@ -34,7 +34,7 @@ export default class Connection_status extends Rapp
 		// STATES
 		// --------------------------------------------------------------------------------
 		// - create or change state: this.state('state_key', [value]);
-		// - get state: this.get_state('state_key');
+		// - get state: this.state('state_key');
 		// --------------------------------------------------------------------------------
 		// --------------------------------------------------------------------------------
 		this.state('status', true);
@@ -65,8 +65,8 @@ export default class Connection_status extends Rapp
 	rendered(){}
 	run = function(props)
 	{
-		this.state('sync_temp', props.sync_temp || this.get_state('sync_temp'), false);
-		this.state('server_sync', props.server_sync || this.get_state('server_sync'), false);
+		this.state('sync_temp', props.sync_temp || this.state('sync_temp'), false);
+		this.state('server_sync', props.server_sync || this.state('server_sync'), false);
 
 		// --------------------------------------------------------------------------------
 		// ACTIONS
@@ -81,22 +81,22 @@ export default class Connection_status extends Rapp
 				this.state('sync', window.setInterval(()=>
 					{
 						this.state('internet', window.navigator.onLine);
-						if(!this.get_state('internet'))
+						if(!this.state('internet'))
 							return this.call_action('ping_error');
 						else
 							this.call_action('ping_ok');
 							
-						if(cont_sync % this.get_state('server_sync') === 0)
+						if(cont_sync % this.state('server_sync') === 0)
 						{
 							cont_sync = 0;
-							if(this.get_state('server_attempts') >= this.get_state('server_max_attempts'))
+							if(this.state('server_attempts') >= this.state('server_max_attempts'))
 								this.call_action('ping_error');
 							else
-								this.state('server_attempts', this.get_state('server_attempts') + 1);
+								this.state('server_attempts', this.state('server_attempts') + 1);
 							this.call_action('ping');
 						}
 						cont_sync++;
-					}, this.get_state('sync_temp')));
+					}, this.state('sync_temp')));
 			});
 		this.action('ping', ()=>
 			{
@@ -106,24 +106,24 @@ export default class Connection_status extends Rapp
 			{
 				if(resp !== undefined && resp !== null)
 					this.state('server_attempts', 0, false);
-				if(this.get_state('server_attempts') === 0)
+				if(this.state('server_attempts') === 0)
 				{
-					this.state('checker_lb_styles', `display:none`, false);
-					this.state('status', true, false);
-					this.state('checker_view', this.get_state('internet') ? 'on' : 'off', false);
-					this.state('checker_txt', this.get_state('internet') ? 'Connected' : 'No internet connection');
-				}else if(this.get_state('server_attempts') < this.get_state('server_max_attempts')){
-					this.state('checker_view', 'check', false);
-					this.state('checker_txt', this.get_state('internet') ? `Connecting with server: ${this.get_state('server_attempts')}` : 'No internet connection');
+					this.state('checker_lb_styles', `display:none`);
+					this.state('status', true);
+					this.state('checker_view', this.state('internet') ? 'on' : 'off');
+					this.state('checker_txt', this.state('internet') ? 'Connected' : 'No internet connection').update();
+				}else if(this.state('server_attempts') < this.state('server_max_attempts')){
+					this.state('checker_view', 'check');
+					this.state('checker_txt', this.state('internet') ? `Connecting with server: ${this.state('server_attempts')}` : 'No internet connection').update();
 				}
 			});
 		this.action('ping_error', (resp)=>
 			{
-				this.state('checker_lb_styles', `display:block;position:fixed;top:0px;left:0px;width:100%;height:100%;z-index:1000`, false);
+				this.state('checker_lb_styles', `display:block;position:fixed;top:0px;left:0px;width:100%;height:100%;z-index:1000`);
 
-				this.state('status', false, false);
-				this.state('checker_view', 'off', false);
-				this.state('checker_txt', this.get_state('internet') ? `No connection with server` : 'No internet connection');
+				this.state('status', false);
+				this.state('checker_view', 'off');
+				this.state('checker_txt', this.state('internet') ? `No connection with server` : 'No internet connection').update();
 			});
 
 		// --------------------------------------------------------------------------------
@@ -173,8 +173,8 @@ export default class Connection_status extends Rapp
 		`;
 
 		this._view.main = `<div>
-			<div class='status-bbox status-${this.get_state('checker_view')}'>
-				<p>${this.get_state('checker_txt')}</p>
+			<div class='status-bbox status-${this.state('checker_view')}'>
+				<p>${this.state('checker_txt')}</p>
 			</div>
 			<div class='conn-validator' style='${this.state('checker_lb_styles')}'></div>
 		</div>`;

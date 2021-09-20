@@ -98,8 +98,8 @@ export default class Dashboard extends Rapp
 						tiktok_buffer.push({k: 'Tiktok_panel', p0: a.username, p1: a.id});
 					}
 				}
-				this.state('insta_accounts', insta_buffer, false);
-				this.state('tiktok_accounts', tiktok_buffer);
+				this.state('insta_accounts', insta_buffer);
+				this.state('tiktok_accounts', tiktok_buffer).update();
 			});
 
 		// if(!this._loaded)

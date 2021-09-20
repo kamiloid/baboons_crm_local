@@ -119,7 +119,7 @@ export default class Tasks_manager extends Rapp
 					});
 				}
 
-				this.state('tasks', buffer);
+				this.state('tasks', buffer).update();
 			});
 
 		// --------------------------------------------------------------------------------

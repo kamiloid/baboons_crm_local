@@ -127,9 +127,9 @@ export default class Rapp{
 		}
 		this.exec();
 	};
-	refresh = function(props = null)
+	update = function(props = null)
 	{
-		this.init(props);
+		this.init(props || this._props);
 	};
 	exec = function()
 	{
@@ -541,34 +541,12 @@ export default class Rapp{
 			type: type
 		});
 	};
-	// set_node_state = function(state, virtual_node, visual_node)
-	// {
-	// 	if(state === null || state === undefined) return;
-	// 	if(typeof(state) !== 'string') return;
-	// 	if(!this._states[state]) return;
-
-	// 	if(!this._uidstates[state])
-	// 		this._uidstates[state] = [];
-	// 	const uid = Rapp.uid();
-	// 	this._uidstates[state][uid] = {virtual: virtual_node, visual: visual_node};
-	// 	// console.log(this._uidstates[state]);
-	// };
-	// state_change = function(key)
-	// {
-	// 	const buffer = this._uidstates[key];
-	// 	if(!buffer) return;
-	// 	console.log(buffer);
-	// };
-	state = function(key, value=null, update=true)
+	state = function(key, value=null)
 	{
 		if(!key) return;
 		if(key.trim() == '') return;
 		if(value === null || value === undefined) return this._states[key];
-		let reload = true;
-		if(this._states[key] === undefined)
-			reload = false;
-		if(this._istates[key])
-			reload = false;
+
 		this._prev_states[key] = this._states[key];
 		this._states[key] = value;
 
@@ -587,12 +565,7 @@ export default class Rapp{
 					node.innerHTML = this._states[key];
 			}
 		}
-		// this.state_change(key);
-		if(reload && this._update_dom && update)
-		{
-			this.init();
-			this._update_dom = false;
-		}
+		return {update: ()=>{this.update()}};
 	};
 	get_state = function(key)
 	{

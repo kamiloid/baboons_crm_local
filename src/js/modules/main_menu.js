@@ -81,8 +81,8 @@ export default class Main_menu extends Rapp
 					if(args[i].restricted && this._main._mods.Session.get_state('plan') !== 1) continue;
 					buffer.push({p1: args[i].name, k: args[i].mod, v: args[i].title});
 				}
-				this.state('plan', this._main._mods.Session.state('plan'), false);
-				this.state('menu_items', buffer);
+				this.state('plan', this._main._mods.Session.state('plan'));
+				this.state('menu_items', buffer).update();
 			});
 		this.action('route', (args)=>
 			{

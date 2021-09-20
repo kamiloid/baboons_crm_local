@@ -76,7 +76,7 @@ export default class App_renderer extends Rapp
 		this.action('checked_session', (args)=>
 			{
 				let logged = !args.error && args.logged;
-				this.state('logged', logged);
+				this.state('logged', logged).update();
 				if(this.state('logged') === true)
 				{
 					this.call_action('load_main_menu');

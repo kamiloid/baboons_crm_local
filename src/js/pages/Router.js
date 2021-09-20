@@ -73,13 +73,13 @@ export default class Router extends Rapp
 		this.action('route', (args)=>
 			{
 				this.state('route', args.k);
-				this.state('title', args.v);
+				this.state('title', args.v).update();
 				this._main._mods[args.k].call_action('run');
 			});
 		this.action('route_settings', (args)=>
 			{
 				this.state('route', 'Settings');
-				this.state('title', 'Settings');
+				this.state('title', 'Settings').update();
 			});
 
 		// --------------------------------------------------------------------------------

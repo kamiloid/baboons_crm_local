@@ -130,9 +130,9 @@ export default class Session_render extends Rapp
 		}
 		`;
 
-		let picture = this._main._mods.Session.get_state('user_picture');
-		let plan = this._main._mods.Session.get_state('plan') === 1 ? 'Business plan' : 'Free plan';
-		plan = this._main._mods.Session.get_state('plan') === 2 ? 'Personal plan' : plan;
+		let picture = this._main._mods.Session.state('user_picture');
+		let plan = this._main._mods.Session.state('plan') === 1 ? 'Business plan' : 'Free plan';
+		plan = this._main._mods.Session.state('plan') === 2 ? 'Personal plan' : plan;
 
 		this._view.main = `<div class='session_info_bbox'>
 			<div class='session_pic_bbox'>
@@ -142,11 +142,11 @@ export default class Session_render extends Rapp
 			</div>
 			<div>
 				<p class='session_info_title'>User name</p>
-				<p class='session_info_value'>${this._main._mods.Session.get_state('user_name')}</p>
+				<p class='session_info_value'>${this._main._mods.Session.state('user_name')}</p>
 				<p class='session_info_title'>Full name</p>
-				<p class='session_info_value'>${this._main._mods.Session.get_state('first_name')} ${this._main._mods.Session.get_state('last_name')}</p>
+				<p class='session_info_value'>${this._main._mods.Session.state('first_name')} ${this._main._mods.Session.state('last_name')}</p>
 				<p class='session_info_title'>E-mail</p>
-				<p class='session_info_value'>${this._main._mods.Session.get_state('email')}</p>
+				<p class='session_info_value'>${this._main._mods.Session.state('email')}</p>
 				<p class='session_info_title'>Plan</p>
 				<p class='session_info_value'>${plan}</p>
 				<div>

@@ -91,7 +91,7 @@ export default class Settings extends Rapp
 					p5: args.type === 'instagram' ? `selected='true'` : '',
 					p6: args.type === 'tiktok' ? `selected='true'` : ''
 				});
-				this.state('accounts', accounts);
+				this.state('accounts', accounts).update();
 			});
 		this.action('save_account', (args)=>
 			{

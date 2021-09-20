@@ -76,13 +76,13 @@ export default class Login extends Rapp
 		this.action('login_error_resp', (args)=>
 			{
 				this.state('response', args.message);
-				this.state('pass', '');
+				this.state('pass', '').update();
 			});
 		this.action('login_rep', (args)=>
 			{
 				this._parent.call_action(props.resp, args);
 				this.state('username', '');
-				this.state('pass', '');
+				this.state('pass', '').update();
 			});
 
 

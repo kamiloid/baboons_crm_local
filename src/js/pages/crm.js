@@ -40,7 +40,7 @@ export default class CRM extends Rapp
 		// STATES
 		// --------------------------------------------------------------------------------
 		// - create or change state: this.state('state_key', [value]);
-		// - get state: this.get_state('state_key');
+		// - get state: this.state('state_key');
 		// --------------------------------------------------------------------------------
 		// --------------------------------------------------------------------------------
 		this.state('section', 'Tasks_manager');
@@ -74,8 +74,8 @@ export default class CRM extends Rapp
 			});
 		this.action('route', (args)=>
 			{
-				this.state('section', args.k, false);
-				this.state('title', args.v);
+				this.state('section', args.k);
+				this.state('title', args.v).update();
 				this._main._mods[args.k].call_action('run');
 			});
 
@@ -117,8 +117,8 @@ export default class CRM extends Rapp
 		}
 		`;
 
-		let section = this.get_state('section');
-		let section_title = this.get_state('title');
+		let section = this.state('section');
+		let section_title = this.state('title');
 
 		this._view.main = `<div>
 			<div class='crm-header'>
