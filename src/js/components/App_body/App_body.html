@@ -1,0 +1,10 @@
+<Fragment>
+    {%if:logged === false:
+    <section>
+        <Login api='[state:api]' resp='login_reponse' addon='login' cmd='try' />
+    </section>:
+    <section>
+        <Connection_status />
+    </section>
+    %}
+</Fragment>

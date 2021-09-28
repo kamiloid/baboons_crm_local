@@ -2,10 +2,13 @@
 // IMPORTS [ ONLY WITH WEBPACK ]
 // --------------------------------------------------------------------------------
 // import [class name | variable]('file_path[.js]');
-import Rapp from './relast.js';
-import App_controller from './modules/app_controller.js';
-import App_renderer from './modules/app_renderer.js';
-import Session from './comps/session.js';
+import Rapp from '../relast.js';
+// import App_controller from '../modules/app_controller.js';
+// import App_renderer from '../modules/app_renderer.js';
+// import Session from '../comps/session.js';
+import App_body from '../components/App_body/App_body.js';
+import view from './App.html';
+import scss from './App.scss';
 // // --------------------------------------------------------------------------------
 // // --------------------------------------------------------------------------------
 
@@ -27,9 +30,10 @@ export default class App extends Rapp
 		// --------------------------------------------------------------------------------
 		// this.add_comp([class_name:string], [class:class]);
 		// this.add_comps([classes:Array]); --> item array: {name: [class_name:string], class: [class:imported-object]}
-		this.add_comp('App_controller', App_controller);
-		this.add_comp('App_renderer', App_renderer);
-		this.add_comp('Session', Session);
+		// this.add_comp('App_controller', App_controller);
+		// this.add_comp('App_renderer', App_renderer);
+		// this.add_comp('Session', Session);
+		this.add_comp('App_body', App_body);
 		// --------------------------------------------------------------------------------
 		// --------------------------------------------------------------------------------
 
@@ -67,7 +71,7 @@ export default class App extends Rapp
 		// --------------------------------------------------------------------------------
 		// --------------------------------------------------------------------------------
 
-		this._mods.App_controller.call_method('entry_point');
+		// this._mods.App_controller.call_method('entry_point');
 
 		// --------------------------------------------------------------------------------
 		// HTML VIEWs
@@ -86,17 +90,9 @@ export default class App extends Rapp
 				url('assets/fonts/abel-regular-webfont.woff') format('woff');
 			font-weight: normal;
 			font-style: normal;
-		}
-
-
-		.h100p
-		{
-			height: 100%;
 		}`;
 
-		this._view.main = `<div class='h100p'>
-			<App_renderer class='h100p'></App_renderer>
-		</div>`;
+		this._view.main = view;
 		// --------------------------------------------------------------------------------
 		// --------------------------------------------------------------------------------
 	}

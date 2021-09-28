@@ -1,0 +1,24 @@
+.login-bbox
+{
+    margin: 10px;
+    align-self: center;
+
+    > div
+    {
+        padding: 10px;
+        background-color: #f4f4f4;
+        border-radius: 5px 5px 0px 0px;
+    }
+
+    > form
+    {    
+        background-color: #a6cdca;
+        padding: 10px;
+        border-radius: 0px 0px 5px 5px;
+    }
+    
+    .login-btn-bbox
+    {
+        text-align: center;
+    }
+}
